@@ -13,4 +13,4 @@ graph LR
     Agent --> Hermes[(Hermes state.db: read-only)]
 ```
 
-Статус реализации: подключён только API Nous (`fetch_models.py`); AA и LMArena — задача 3 в `specs/001-model-advisor/tasks.md`.
+Статус реализации: подключены API Nous (`fetch_models.py`), AA и LMArena (`fetch_scores.py`); `query.py` — задачи 4–5 в `specs/001-model-advisor/tasks.md`.

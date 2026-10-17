@@ -5,7 +5,7 @@
 - [x] 0. Этап 0 (выполнен 2026-10-17, см. `stage0/report.md`): живая проверка AA и LMArena, сопоставление имён, согласованность шкал → `stage0/report.md`; закрыть [NEEDS CLARIFICATION] в `spec.md`; финальная таблица категорий (AC: 3, 4, 9, 12)
 - [x] 1. Gate 1: ADR-0001 принят (A1, B1, C2), решения D1–D5 приняты (2026-10-17)
 - [x] 2. `skill/scripts/fetch_models.py`, фикстуры и тесты каталога; `docs/architecture/*` обновлены (AC: 1, 2) — 18 тестов, живой прогон 426 → 321 семейство
-- [ ] 3. `fetch_scores.py`: адаптеры AA и LMArena, резервный режим, сопоставление имён; тесты (AC: 3, 4, 18) — после 2
+- [x] 3. `fetch_scores.py`: адаптеры AA и LMArena, резервный режим, сопоставление имён; тесты (AC: 3, 4, 18) — 61 тест всего (43 новых), живой прогон: AA ok, LMArena ok, 172 семейства с оценками; AgDR-0002
 - [ ] 4. `query.py` — расчёты и заголовок: value, нормализация по источнику, флагманы, spotlight; `config.json` (AC: 5–12, 17) — после 3
 - [ ] 5. `query.py` — show, compare, search, плюсы и минусы, перевод/целостность (AC: 13–16) — после 4
 - [ ] 6. `SKILL.md`, `references/maintenance.md`, процедура перевода агентом (AC: 15, 19) — [P] с 5
@@ -14,44 +14,28 @@
 
 ## Передача в следующую сессию
 
-Состояние на конец сессии 1. Код-коммит: `cd8307a` (шаги 0–2 готовы). Следующий шаг — **3 (`fetch_scores.py`)**.
+Состояние на конец сессии 2. Шаги 0–3 готовы. Код-коммит шага 3 — см. `git log` (трейлер `Task: task-2026-10-17-001`). Следующий шаг — **4 (`query.py`: расчёты и заголовок)**.
 
-**Как начать:** «Следуй `tools/ai-agent-governance/SKILL.md`, продолжи `task-2026-10-17-001`, шаг 3 из `specs/001-model-advisor/tasks.md`». Прочитать: `docs/constitution.md`, `spec.md`, `plan.md`, `stage0/report.md`, `docs/agdr/0001-*.md`, `skill/scripts/fetch_models.py` (образец стиля и контракта).
+**Как начать:** «Следуй `tools/ai-agent-governance/SKILL.md`, продолжи `task-2026-10-17-001`, шаг 4 из `specs/001-model-advisor/tasks.md`». Прочитать: `docs/constitution.md`, `spec.md` (AC-5…AC-12, AC-17, AC-20), ТЗ v0.6 §7, `docs/agdr/0002-*.md`, `skill/config.json`, форму `skill/data/scores.json` и `models.json`.
 
-**Проверки перед работой и после каждого шага:**
-- `python -m unittest discover -s tests` — сейчас 18 тестов, все проходят.
-- `python tools/ai-agent-governance/scripts/validate_governance.py --project-root . --strict` — сейчас OK.
-- Коммиты с трейлером `Task: task-2026-10-17-001`.
+**Проверки:** `python -m unittest discover -s tests` (61 тест), `python tools/ai-agent-governance/scripts/validate_governance.py --project-root . --strict`.
 
-**Среда:** Windows, команда `python` (не `python3`), оболочка bash. Предупреждения Git про LF/CRLF безвредны. Кириллица в пути проблем не создаёт. Ключ AA лежит в `.env` в корне репозитория (35 символов); значение не печатать, не писать в файлы, не включать в тексты ошибок.
+**Среда:** Windows, `python`, bash. Ключ AA в `.env` в корне (не печатать). Полный живой прогон `fetch_scores.py` идёт ~10 минут из-за лимитов Hugging Face (паузы 5→40 с): запускать в фоне, не в foreground-терминале с таймаутом 420 с.
 
-### Шаг 3: что известно про источники (проверено живыми запросами, этап 0)
+### Контракт `scores.json` (schema_version 1) — вход для шага 4
+- Верхний уровень: `fetched_at`, `mode` (`full | aa_only | fallback`), `sources`, `model_count`, `models`.
+- `sources.artificial_analysis`: `{status: ok, terms, entry_count}` или `{status: unavailable, reason}`; `sources.lmarena`: `{status: ok | partial | unavailable, license, leaderboard_date, metrics_loaded, incomplete{метрика: причина}}`.
+- `models[family_id]` содержит ровно четыре ключа `overall, coding, agentic, vision`; значение — `null` или `{value, source, metric, date, config, matched_name}`. `config` — `null`, если у модели одна конфигурация без метки; иначе `medium/high/…` (пометка «конфигурация: X» нужна при `config` не равном `medium` и не `null`).
+- Семейства без единой оценки в `models` отсутствуют (= «нет данных»). Алиасов там нет. Не-чат семейства могут быть.
+- Шкалы: AA `value` — баллы (десятки), `terminalbench_hard` — доля 0–1; Arena rating ~1000–1500, Arena `agent` — доля около 0–0,2. Нормализовать только внутри источника **и метрики**.
+- `name_map.json`: `matches`, `candidates` (не использовать), `ambiguous_catalog_keys`. Файл содержит имена AA, не коммитится.
 
-**Artificial Analysis**
-- `GET https://artificialanalysis.ai/api/v2/data/llms/models`, заголовок `x-api-key`. Один запрос отдаёт всё: 704 записи.
-- Каждая запись — конфигурация модели: усилие стоит в имени, например `Claude Opus 5.5 (Max, Default Fallback)`, слаг вида `claude-opus-5-5-high`. Метки усилия: `max, xhigh, high, medium, low, minimal, non-reasoning` и «без метки» (у большинства моделей конфигурация одна).
-- Нужные поля `evaluations`: `artificial_analysis_intelligence_index`, `artificial_analysis_coding_index`, `terminalbench_hard`. Поля `artificial_analysis_math_index` и `tau2` не нужны: reasoning переведён на общий рейтинг (D5), agentic = `terminalbench_hard` (D4).
-- Без ключа и с неверным ключом — `401` (`API key is required` / `Invalid API key.`). Ответы `403`, `429` и суточный лимит **не проверены**; резервный режим должен обработать их как недоступность.
-
-**LMArena** (`https://datasets-server.huggingface.co`, датасет `lmarena-ai/leaderboard-dataset`, split `latest`)
-- Нужны конфигурации и категории: `text` → `overall`, `coding`; `vision` → `overall`; `agent` → `overall`. Колонки: `model_name, rating, category, leaderboard_publish_date`. Резерв для reasoning — `text overall` (D5).
-- Размеры: `text` 11033 строки (111 страниц по 100), `vision` 1124, `agent` 52.
-- **Лимит Hugging Face.** Постраничная выгрузка `text` целиком упёрлась в `429`; помогла экспоненциальная пауза 5→40 с, всё заняло несколько минут. Один запрос к `/filter` вернул `500: the dataset index is loading` — штатное поведение фильтра не проверено. Нужно: попробовать `/filter` по `category`, при неудаче — пагинация с паузами; при неполной загрузке записать это в `scores.json`, а не отдавать частичные данные как полные.
-- В `vision` смешаны даты (34 строки от 2026-01-09, остальные 2026-10-09): для пары модель×категория брать самую свежую.
-- Имена содержат усилие в скобках (`Claude Opus 5.5 (High)`) или суффиксом (`gpt-6-sol-max`). У 388 из 399 моделей `text overall` одна конфигурация; Medium всего у 2.
-
-### Шаг 3: правила, которые легко нарушить
-
-1. **Сопоставление имён — только точное равенство после нормализации** (нижний регистр, точки и подчёркивания → дефисы, скобки и метка усилия отброшены). Нечёткие совпадения идут в `name_map.json` со статусом `candidate` и в выводе не используются: `gpt-6-sol-pro` ≠ `gpt-6-sol`, `gpt-terra` ≠ `gpt-5-6-terra`. Пример нормализации — `specs/001-model-advisor/stage0/p9_deep.py`.
-2. **Алиасы (`alias: true`) оценок не получают**; не-чат семейства (`chat: false`) в рекомендации не идут, но оценки могут иметь. Сопоставлять по `family_id`/`representative_id` из `skill/data/models.json`.
-3. **Конфигурация усилия (D1):** Medium, иначе порядок `medium → high → low → xhigh → max → minimal → non-reasoning`; единственная конфигурация берётся как есть; выбранная конфигурация сохраняется в оценке (поле для пометки «конфигурация: High»). Порядок вынести в `config.json`.
-4. **Резервный режим:** `status: unavailable` + `reason` из набора `no_key | auth_error | rate_limited | network | bad_response`; значения AA из прошлого снапшота не переносить; ошибка AA не должна ронять сбор LMArena и наоборот.
-5. **Выбор источника по модели:** AA, а если у модели нет значения метрики — аналог из LMArena; источник в каждом значении `{value, source, metric, date}`. Нет значения — `null`, не ноль.
-6. **Секреты:** ключ не попадает в `scores.json`, `name_map.json`, stdout/stderr и тексты исключений (фильтровать). Тест на это обязателен (AC-4, AC-18).
-7. Схему снапшота снабдить `schema_version`, запись атомарная (как в `fetch_models.py`): при полном провале прежний файл остаётся.
-
-### Шаг 3: открытое мелкое решение
-Где искать ключ: по ТЗ NFR-1 — переменная `AA_API_KEY`, затем `.env` «в корне скилла». После раскладки `skill/` (ADR-0001, C2) файл `.env` фактически лежит в корне репозитория. Предложение: искать `AA_API_KEY` → `skill/.env` → `.env` в корне репозитория, зафиксировать в AgDR. Если сомнений нет — принять без вопросов к владельцу; `.env` уже в `.gitignore`.
+### Что показал шаг 3 (живые данные)
+- AA вернул 696 записей с хотя бы одной нужной метрикой. Семейств с оценками 172 из 321 (с поправкой на 321 вместо 331 из этапа 0): overall — AA 154 + Arena 16 (170 всего), coding — 95 + 47, agentic — 101 + 34, vision — 63 (только Arena).
+- Конфигурация выбирается **по каждой метрике отдельно** (AgDR-0002), поэтому у одного семейства overall может быть из Medium, а coding из High; `config` у каждого значения свой. В `query.py` пометку конфигурации показывать у значения, а не у семейства.
+- В AA есть метка `Reasoning` (старые модели с отдельным режимом); в порядок предпочтения она добавлена после `xhigh/max`, перед `minimal` и `non-reasoning`.
+- LMArena: `/filter` отвечает нестабильно (500 «index is loading», 502); сбор делает повторы с паузами, при отказе — `/rows`. `partial` фиксируется в статусе.
+- Нечётких кандидатов 52 (порог 0,85); часть из них — вероятные верные совпадения (`Nova Lite` → `nova-lite-v1`), но по правилу 1 они оценок не дают. Пересмотр правила — решение владельца, не агента.
 
 ### Шаги 4–5: что учесть
 - Формулы и пороги — ТЗ v0.6 §7; все числа порогов в `config.json`, не в коде. Пороги spotlight пока черновые, настраиваются на шаге 7.
