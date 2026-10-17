@@ -7,7 +7,7 @@ graph TB
     subgraph Skill["skill/ (дистрибутив, stdlib-only)"]
       FM[scripts/fetch_models.py]
       FS[scripts/fetch_scores.py]
-      Q[scripts/query.py - planned]
+      Q[scripts/query.py]
       Cfg[config.json]
       Models[(data/models.json)]
       Scores[(data/scores.json - не распространяется)]
@@ -41,3 +41,5 @@ graph TB
 Контракт между скриптами — JSON-файлы в `skill/data/` с полем `schema_version` (сейчас 1 для `models.json`). `fetch_models.py` пишет снапшот атомарно: при ошибке прежний файл остаётся нетронутым.
 
 `fetch_scores.py` читает `models.json` (семейства для сопоставления) и `config.json` (порядок конфигураций, адреса и категории источников, паузы), пишет `scores.json` (`schema_version` 1, `mode`: `full | aa_only | fallback`, статус каждого источника, значения `{value, source, metric, date, config, matched_name}` или `null`) и `name_map.json` (точные совпадения, кандидаты, неоднозначные ключи). Обе записи атомарные; при отказе обоих источников прежние файлы остаются. Правила — AgDR-0002.
+
+`query.py` читает `models.json`, `scores.json` и раздел `query` в `config.json` (категории, соотношения in:out, пороги, spotlight, тексты причин недоступности AA), сети не использует. Расчёты — чистые функции (`recommend`, `flagships`, `spotlight`), вывод — отдельные `render_*`; одинаковые входы дают побайтно одинаковый текст (AgDR-0003). Команды шага 4: `recommend --task`, `models --set flagships|spotlight`; `show`, `compare`, `search`, перевод и проверка целостности — шаг 5. `descriptions_ru.json` и `name_map.json` `query.py` пока не читает.
