@@ -44,6 +44,16 @@
    "cheap_limit": 15
   },
   "description_max_chars": 200,
+  "search_limit": 20,
+  "pros_cons": {
+   "top_percentile": 75,
+   "median_percentile": 50,
+   "min_pool_size": 10,
+   "long_context_tokens": 1000000,
+   "short_context_tokens": 32000,
+   "expensive_output_percentile": 75,
+   "cheap_output_percentile": 25
+  },
   "unavailable_reasons": {
    "no_key": "не задан AA_API_KEY",
    "auth_error": "ошибка доступа, ключ недействителен",

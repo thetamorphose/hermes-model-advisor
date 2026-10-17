@@ -13,4 +13,4 @@ graph LR
     Agent --> Hermes[(Hermes state.db: read-only)]
 ```
 
-Статус реализации: подключены API Nous (`fetch_models.py`), AA и LMArena (`fetch_scores.py`); `query.py`: `recommend` и `models` готовы (шаг 4), `show`, `compare`, `search` — шаг 5 в `specs/001-model-advisor/tasks.md`.
+Статус реализации: подключены API Nous (`fetch_models.py`), AA и LMArena (`fetch_scores.py`); `query.py`: `recommend`, `models` (шаг 4), `show`, `compare`, `search` с плюсами и минусами, переводами описаний и проверкой целостности (шаг 5) готовы.
