@@ -2,6 +2,7 @@
 
 ## Architecture linkage (mandatory)
 
+- Источник требований: `docs/history/ТЗ_v0.6.md`.
 - Constitution sections: `Domain vision` (пункты 1–5), `Ubiquitous language` (все 14 терминов; особенно Общий рейтинг, Флагман, Оценка по общему рейтингу, Снапшот оценок), `Architecture principles` 1–4.
 - Bounded context(s) (`docs/contexts/*.yml`): отсутствуют. Продукт — один контекст; отдельный файл не создаётся до появления второго (решение откладывается, см. «Технические решения»).
 - Related ADR(s): пока нет. ADR-0001 (stdlib-only, файловые снапшоты как публичный контракт) предложен в `docs/adr/0001-stdlib-only-file-snapshots.md`, статус `proposed`, ждёт решения владельца на Gate 1.
@@ -17,8 +18,8 @@
 | Decision | Record (ADR/AgDR) |
 |---|---|
 | Чистый Python 3.10+, только stdlib (ТЗ NFR-1, утверждено владельцем вместе с ТЗ) | ADR-0001 `proposed` |
-| Снапшоты как JSON-файлы в `data/` — публичный контракт между скриптами (схемы ТЗ §6, дополнены `status/reason` у источника) | ADR-0001 `proposed` |
-| Структура: корень репозитория = портативный скилл (`SKILL.md`, `config.json`, `scripts/`, `data/`, `references/`) вместе с governance-файлами | ADR-0001 `proposed` |
+| Снапшоты как JSON-файлы в `data/` — публичный контракт между скриптами (схемы ТЗ v0.6 §6, дополнены `status/reason` у источника) | ADR-0001 `proposed` |
+| Раскладка: скилл в `skill/` (`SKILL.md`, `config.json`, `scripts/`, `data/`, `references/`), governance-файлы в корне — предложено; альтернатива — корень = скилл, как в ТЗ §6 | ADR-0001 `proposed`, часть C |
 | Источник LMArena: JSON-API Hugging Face datasets-server (ТЗ FR-2); точный набор конфигураций и колонок уточняет этап 0 | AgDR после этапа 0 |
 
 ## Approach
