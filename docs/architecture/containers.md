@@ -9,6 +9,8 @@ graph TB
       FS[scripts/fetch_scores.py]
       Q[scripts/query.py]
       Cfg[config.json]
+      SkillMd[SKILL.md]
+      Maint[references/maintenance.md]
       Models[(data/models.json)]
       Scores[(data/scores.json - не распространяется)]
       NameMap[(data/name_map.json)]
@@ -42,4 +44,4 @@ graph TB
 
 `fetch_scores.py` читает `models.json` (семейства для сопоставления) и `config.json` (порядок конфигураций, адреса и категории источников, паузы), пишет `scores.json` (`schema_version` 1, `mode`: `full | aa_only | fallback`, статус каждого источника, значения `{value, source, metric, date, config, matched_name}` или `null`) и `name_map.json` (точные совпадения, кандидаты, неоднозначные ключи). Обе записи атомарные; при отказе обоих источников прежние файлы остаются. Правила — AgDR-0002.
 
-`query.py` читает `models.json`, `scores.json` и раздел `query` в `config.json` (категории, соотношения in:out, пороги, spotlight, тексты причин недоступности AA), сети не использует. Расчёты — чистые функции (`recommend`, `flagships`, `spotlight`), вывод — отдельные `render_*`; одинаковые входы дают побайтно одинаковый текст (AgDR-0003). Команды: `recommend --task`, `models --set flagships|spotlight` (шаг 4); `show`, `compare`, `search` (шаг 5; правила — AgDR-0004). Необязательные файлы `descriptions_ru.json` (переводы описаний с хешем оригинала; создаёт агент, шаг 6) и `name_map.json` `query.py` читает только для описаний и проверки целостности: id, которых нет в каталоге, помечаются устаревшими в начале вывода, файлы не меняются; битый файл даёт предупреждение. Плюсы и минусы — правила из раздела `pros_cons` в `config.json`.
+`query.py` читает `models.json`, `scores.json` и раздел `query` в `config.json` (категории, соотношения in:out, пороги, spotlight, тексты причин недоступности AA), сети не использует. Расчёты — чистые функции (`recommend`, `flagships`, `spotlight`), вывод — отдельные `render_*`; одинаковые входы дают побайтно одинаковый текст (AgDR-0003). Команды: `recommend --task`, `models --set flagships|spotlight` (шаг 4); `show`, `compare`, `search` (шаг 5; правила — AgDR-0004). Необязательные файлы `descriptions_ru.json` (переводы описаний с хешем оригинала; создаёт агент по процедуре из `references/maintenance.md`, правила выбора множества — AgDR-0005) и `name_map.json` `query.py` читает только для описаний и проверки целостности: id, которых нет в каталоге, помечаются устаревшими в начале вывода, файлы не меняются; битый файл даёт предупреждение. Плюсы и минусы — правила из раздела `pros_cons` в `config.json`.
