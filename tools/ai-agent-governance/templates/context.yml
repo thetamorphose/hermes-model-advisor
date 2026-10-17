@@ -1,0 +1,10 @@
+name: ExampleContext
+type: bounded-context
+layer: supporting
+entities: []
+value_objects: []
+services: []
+repositories: []
+upstream: []
+downstream: []
+relationship: ""

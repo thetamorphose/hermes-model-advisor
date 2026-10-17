@@ -1,0 +1,4 @@
+.env
+data/scores.json
+.governance-task.lock
+__pycache__/
