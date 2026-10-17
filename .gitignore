@@ -1,5 +1,5 @@
 .env
-data/scores.json
+skill/data/scores.json
 .governance-task.lock
 __pycache__/
 
