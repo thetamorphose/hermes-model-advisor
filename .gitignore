@@ -2,3 +2,7 @@
 data/scores.json
 .governance-task.lock
 __pycache__/
+
+# этап 0: сырые ответы источников (AA нельзя распространять; остальное велико и воспроизводимо)
+specs/*/stage0/*.raw.json
+specs/*/stage0/match_stats.json
