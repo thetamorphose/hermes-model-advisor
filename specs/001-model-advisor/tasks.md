@@ -10,17 +10,11 @@
 - [x] 5. `query.py` — show, compare, search, плюсы и минусы, перевод/целостность (AC: 13–16) — 150 тестов всего (44 новых), живой вывод проверен на 321 семействе; AgDR-0004
 - [x] 6. `SKILL.md`, `references/maintenance.md`, процедура перевода агентом (AC: 15, 19) — 67 переводов в `descriptions_ru.json`, AgDR-0005
 - [x] 7. Приёмка на живых данных, отчёт о прогоне, настройка порогов spotlight (AC: все) — выполнено 2026-10-17: все AC-1…20 проходят, 150 тестов OK, validator OK, побайтово воспроизводимо, ключ AA не утёк; пороги spotlight и плюсов/минусов оставлены без изменений (AgDR-0006); отчёт `specs/001-model-advisor/acceptance.md`
-- [ ] 8. Обновить constitution (если изменился язык) и закрыть task-запись: коммит, тест-команда, результат
+- [x] 8. Обновить constitution (если изменился язык) и закрыть task-запись: коммит, тест-команда, результат — выполнено 2026-10-17: язык/видение/принципы на шагах 6–7 не менялись (constitution без правок); task-запись закрыта (`status: done`, итоговый коммит и тест-результат записаны)
 
 ## Передача в следующую сессию
 
-Состояние на конец сессии 6. Шаги 0–7 готовы. Код-коммиты шагов — см. `git log` (трейлер `Task: task-2026-10-17-001`). Следующий шаг — **8 (constitution при изменении языка, закрыть task-запись: коммит, тест-команда, результат)**.
-
-**Как начать:** «Следуй `tools/ai-agent-governance/SKILL.md`, продолжи `task-2026-10-17-001`, шаг 8 из `specs/001-model-advisor/tasks.md`». Прочитать: `docs/constitution.md` (проверить, изменился ли язык/видение/принципы — на шаге 7 новых терминов не вводилось, пороги — параметры, не язык), `specs/001-model-advisor/acceptance.md` (итог приёмки), затем закрыть task-запись.
-
-**Проверки:** `python -m unittest discover -s tests` (150 тестов), `python tools/ai-agent-governance/scripts/validate_governance.py --project-root . --strict`.
-
-**Среда:** Windows, `python`, bash. Ключ AA в `.env` в корне (не печатать). Полный живой прогон `fetch_scores.py` идёт ~10 минут из-за лимитов Hugging Face (паузы 5→40 с): запускать в фоне, не в foreground-терминале с таймаутом 420 с.
+Состояние на конец сессии 7. **Проект закрыт**: шаги 0–8 выполнены, task-запись `tasks/2026-10-17-001-советник-по-моделям-nous-spec-plan-этап-0.md` в статусе `done`. Код-коммиты шагов — см. `git log` (трейлер `Task: task-2026-10-17-001`). Сопровождение — `skill/references/maintenance.md`; открытые замечания — `tech-debt.md` (TD-001…TD-003), вопросы владельца — `specs/001-model-advisor/acceptance.md`.
 
 ### Что сделано на шаге 7 (для шага 8)
 - Приёмка на живых данных завершена, отчёт — `specs/001-model-advisor/acceptance.md`. Все AC-1…20 проходят. 150 тестов OK, validator OK.
@@ -82,8 +76,8 @@
 
 ## Definition of Done
 
-- [ ] Acceptance criteria from spec.md pass (tests or verified behavior)
-- [ ] Task record updated: commit hash, files changed, test command and result
-- [ ] Architecture docs updated in the same commit if structure changed (`docs/architecture/*`)
-- [ ] Constitution updated if language, vision or principles changed
-- [ ] ADR/AgDR written for every decision made along the way
+- [x] Acceptance criteria from spec.md pass (tests or verified behavior)
+- [x] Task record updated: commit hash, files changed, test command and result
+- [x] Architecture docs updated in the same commit if structure changed (`docs/architecture/*`) — структура не менялась в шагах 6–8, обновления не требовались
+- [x] Constitution updated if language, vision or principles changed — язык/видение/принципы не менялись, правки не требовались
+- [x] ADR/AgDR written for every decision made along the way — AgDR-0001…0006
