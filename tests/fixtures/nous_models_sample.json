@@ -1,0 +1,253 @@
+{
+ "data": [
+  {
+   "id": "vendor/alpha",
+   "canonical_slug": "vendor/alpha-20260101",
+   "name": "V: Alpha",
+   "created": 1,
+   "context_length": 1000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text",
+     "image"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.0000009400",
+    "completion": "0.0000018900",
+    "input_cache_read": "0.0000002500"
+   }
+  },
+  {
+   "id": "vendor/alpha:batch",
+   "canonical_slug": "vendor/alpha-20260101",
+   "name": "V: Alpha",
+   "created": 1,
+   "context_length": 1000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text",
+     "image"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.0000004700",
+    "completion": "0.0000009450"
+   }
+  },
+  {
+   "id": "vendor/alpha-0813",
+   "canonical_slug": "vendor/alpha-0813",
+   "name": "V: Alpha 0813",
+   "created": 2,
+   "context_length": 1000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.0000002289",
+    "completion": "0.0000007497"
+   }
+  },
+  {
+   "id": "vendor/beta-2603",
+   "canonical_slug": "vendor/beta-2603",
+   "name": "V: Beta",
+   "created": 3,
+   "context_length": 2000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.000001",
+    "completion": "0.000002"
+   }
+  },
+  {
+   "id": "vendor/beta-2603:batch",
+   "canonical_slug": "vendor/beta-2603",
+   "name": "V: Beta",
+   "created": 3,
+   "context_length": 2000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.0000005",
+    "completion": "0.000001"
+   }
+  },
+  {
+   "id": "~vendor/gamma-latest",
+   "canonical_slug": "~vendor/gamma-latest",
+   "name": "V: Gamma latest",
+   "created": 4,
+   "context_length": 3000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.000002",
+    "completion": "0.000004"
+   }
+  },
+  {
+   "id": "vendor/chat-latest",
+   "canonical_slug": "vendor/chat-latest-20260505",
+   "name": "V: Chat",
+   "created": 5,
+   "context_length": 4000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.000005",
+    "completion": "0.00003"
+   }
+  },
+  {
+   "id": "vendor/embed-1",
+   "canonical_slug": "vendor/embed-1",
+   "name": "V: Embed",
+   "created": 6,
+   "context_length": 512,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "embeddings"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.00000002",
+    "completion": "0"
+   }
+  },
+  {
+   "id": "vendor/delta",
+   "canonical_slug": "vendor/delta",
+   "name": "V: Delta",
+   "created": 7,
+   "context_length": 5000,
+   "description": "d",
+   "architecture": {},
+   "pricing": {
+    "prompt": "0.000001",
+    "completion": "0.000003"
+   }
+  },
+  {
+   "id": "vendor/delta:batch",
+   "canonical_slug": "vendor/delta",
+   "name": "V: Delta",
+   "created": 7,
+   "context_length": 5000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text",
+     "image",
+     "file"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.0000005",
+    "completion": "0.0000015"
+   }
+  },
+  {
+   "id": "vendor/free-only:free",
+   "canonical_slug": "vendor/free-only",
+   "name": "V: Free",
+   "created": 8,
+   "context_length": 6000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0",
+    "completion": "0"
+   }
+  },
+  {
+   "id": "vendor/disc",
+   "canonical_slug": "vendor/disc",
+   "name": "V: Disc",
+   "created": 9,
+   "context_length": 7000,
+   "description": "d",
+   "architecture": {
+    "input_modalities": [
+     "text"
+    ],
+    "output_modalities": [
+     "text"
+    ]
+   },
+   "pricing": {
+    "prompt": "0.000001",
+    "completion": "0.000002",
+    "original": {
+     "prompt": "0.000002",
+     "completion": "0.000004"
+    },
+    "overrides": [
+     {
+      "min_prompt_tokens": 100000,
+      "prompt": "0.0000025",
+      "completion": "0.00000125"
+     }
+    ]
+   }
+  }
+ ]
+}
